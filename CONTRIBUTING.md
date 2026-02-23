@@ -22,8 +22,7 @@
   - Basic testing steps provided
 
 ## Merging
-- Squash merge is preferred (keeps history clean), unless the team decides otherwise.
-- Delete branch after merge.
+- Don't have to delete branch after merge.
 
 ## Tips
 - Keep PRs small when possible.
