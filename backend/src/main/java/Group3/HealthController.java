@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
     /* GET http://localhost:8080/health will return
-    the Map as a JSON, example:
+      the Map as a JSON, example:
       "status": "ok",
       "timestamp": "2026-02-24T13:45:12.123Z" */
 
