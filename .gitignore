@@ -1,15 +1,55 @@
-# Gradle
+############################
+# Java / Gradle
+############################
 .gradle/
 build/
-backend/build/
+bin/
+out/
+*.class
 
-# JDK
-oracleJdk-25/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# IDE
-.vscode/
+############################
+# Spring Boot
+############################
 *.log
+*.pid
+*.seed
+*.pid.lock
+
+############################
+# IntelliJ
+############################
+.idea/
+*.iml
+
+############################
+# VS Code
+############################
+.vscode/
+
+############################
+# macOS
+############################
+.DS_Store
+
+############################
+# Windows
+############################
+Thumbs.db
+Desktop.ini
+
+############################
+# Node / Frontend
+############################
+node_modules/
+dist/
+build/
+
+############################
+# Environment files (important later)
+############################
+.env
+.env.local
+.env.*
+
+# jdk
+oracleJdk-25/
