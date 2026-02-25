@@ -50,3 +50,6 @@ build/
 .env
 .env.local
 .env.*
+
+# jdk
+oracleJdk-25/
