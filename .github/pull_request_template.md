@@ -27,35 +27,5 @@ Explain why this change is necessary. Provide design justification, links to req
 
 ---
 
-## How to Test
-List explicit steps for reviewers to validate the change. Include backend, frontend, and any manual checks.
-
-- [ ] Backend:
-  1. 
-  2.
-- [ ] Frontend (if applicable):
-  1.
-  2.
-- [ ] Manual / Integration:
-  1.
-  2.
-
----
-
-## Checklist
-- [ ] PR title is clear and scoped
-- [ ] Linked to an issue
-- [ ] Acceptance criteria addressed
-- [ ] No secrets committed (`.env`, credentials, keys)
-- [ ] README / docs updated if needed
-- [ ] Automated tests added or existing tests updated (if applicable)
-- [ ] Requested at least 2 reviewers (not the author)
-
----
-
 ## Screenshots / Evidence (if applicable)
 Attach screenshots, logs, or short recordings showing the change in action.
-
----
-(Optional) Maintainer notes:
-- Migration steps, breaking changes, or things to run post-merge.
