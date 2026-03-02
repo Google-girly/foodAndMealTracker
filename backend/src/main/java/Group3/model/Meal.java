@@ -65,6 +65,9 @@ public class Meal {
     public String getDescription(){
         return description;
     }
+    public void setDescription(String Description){
+        this.description = Description;
+    }
     public LocalDateTime getCreatedAt(){
         return createdAt;
     }
