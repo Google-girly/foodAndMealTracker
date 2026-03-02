@@ -2,6 +2,7 @@ package Group3.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,7 +16,9 @@ public class Meal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     //Based on ERD
+    @Column(name = "users_id")
     private Long usersId;
+    
     private String name;
     private String mealType;
     private LocalDate mealDate;

@@ -12,30 +12,40 @@ import Group3.model.Meal;
 import Group3.service.MealService;
 
 import java.util.*;
+
 @RestController
 @RequestMapping("/meals")
 public class MealController {
     private final MealService mealService;
 
-    public MealController(MealService mealService){
+    public MealController(MealService mealService) {
         this.mealService = mealService;
     }
 
-    //GET /meals
+    // GET /meals
     @GetMapping
-    public List<Meal> getAllMeals(){
-        return mealService.getAllMeals();
+    public List<Meal> getAllMeals() {
+        Long usersId = getCurrentUsersId();
+        return mealService.getAllMeals(usersId);
     }
 
-    //GET /meals/{id}
+    // GET /meals/{id}
     @GetMapping("/{id}")
-    public ResponseEntity<Meal> getMealById(@PathVariable Long id){
-        return mealService.getMealbyId(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Meal> getMealById(@PathVariable Long id) {
+        Long usersId = getCurrentUsersId();
+        return mealService.getMealbyId(id, usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-    //POST /meals
+
+    // POST /meals
     @PostMapping
-    public ResponseEntity<Meal> creatMeal(@RequestBody Meal meal){
-        Meal created = mealService.createMeal(meal);
+    public ResponseEntity<Meal> creatMeal(@RequestBody Meal meal) {
+        Long usersId = getCurrentUsersId();
+        Meal created = mealService.createMeal(meal, usersId);
         return ResponseEntity.status(201).body(created);
+    }
+
+    // Temp until OAuth is integrated:
+    private Long getCurrentUsersId() {
+        return 1L; // TODO: replace with OAuth principal -> DB user id mapping
     }
 }
