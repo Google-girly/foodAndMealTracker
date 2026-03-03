@@ -34,6 +34,9 @@ dependencies {
 
 	//for testing with no real db
 	runtimeOnly 'com.h2database:h2'
+
+	//adds H2 test dependency
+	testImplementation 'com.h2database:h2'
 }
 
 tasks.named('test') {
