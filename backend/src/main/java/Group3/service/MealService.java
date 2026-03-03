@@ -39,7 +39,7 @@ public class MealService {
         meal.setMealType(updatedMeal.getMealType());
         meal.setMealDate(updatedMeal.getMealDate());
         meal.setDescription(updatedMeal.getDescription());
-
+        meal.setUpdatedAt(updatedMeal.getUpdatedAt());
         Meal saved = mealRepository.save(meal);
         return Optional.of(saved);
     }
