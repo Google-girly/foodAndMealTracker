@@ -2,8 +2,10 @@ package Group3.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,5 +39,16 @@ public class MealController {
     public ResponseEntity<Meal> creatMeal(@RequestBody Meal meal){
         Meal created = mealService.createMeal(meal);
         return ResponseEntity.status(201).body(created);
+    }
+    
+    //PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<Meal> updateMeal(@PathVariable Long id, @RequestBody Meal updatedMeal){
+        return mealService.updateMeal(id,updatedMeal).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+    //PATCH
+    @PatchMapping("/{id}")
+    public ResponseEntity<Meal> patchMeal(@PathVariable Long id,@RequestBody Meal partialMeal){
+        return mealService.patchMeal(id,partialMeal).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 }
