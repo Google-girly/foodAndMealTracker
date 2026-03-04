@@ -2,9 +2,12 @@ package Group3.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -53,6 +57,10 @@ public class Meal {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @OneToMany(mappedBy = "meal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<MealFood> mealFoods;
+
     public Meal() {}
 
     public Long getId() { return id; }
@@ -80,4 +88,7 @@ public class Meal {
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public List<MealFood> getMealFoods() { return mealFoods; }
+    public void setMealFoods(List<MealFood> mealFoods) { this.mealFoods = mealFoods; }
 }
