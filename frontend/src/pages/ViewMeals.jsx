@@ -9,6 +9,9 @@ export default function ViewMeals() {
   const [userId, setUserId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [expandedMeal, setExpandedMeal] = useState(null)
+  const [editingMeal, setEditingMeal] = useState(null)
+  const [editName, setEditName] = useState('')
+  const [editType, setEditType] = useState('snack')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -54,6 +57,48 @@ export default function ViewMeals() {
     }
   }
 
+  const startEditingMeal = (meal) => {
+    setEditingMeal(meal.id)
+    setEditName(meal.name)
+    setEditType(meal.mealType)
+  }
+
+  const saveEditMeal = async (mealId) => {
+    if (!editName.trim()) {
+      alert('Meal name cannot be empty')
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/meals/${mealId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: editName,
+          mealType: editType,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to update meal')
+      const updatedMeal = await response.json()
+      
+      setMeals((prev) =>
+        prev.map((m) => (m.id === mealId ? updatedMeal : m))
+      )
+      setEditingMeal(null)
+      alert('Meal updated successfully!')
+    } catch (error) {
+      console.error('saveEditMeal error', error)
+      alert('Error updating meal: ' + error.message)
+    }
+  }
+
+  const cancelEditMeal = () => {
+    setEditingMeal(null)
+    setEditName('')
+    setEditType('snack')
+  }
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     window.location.href = '/login'
@@ -95,32 +140,80 @@ export default function ViewMeals() {
                 borderRadius: '4px',
               }}
             >
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  cursor: 'pointer',
-                }}
-                onClick={() =>
-                  setExpandedMeal(expandedMeal === meal.id ? null : meal.id)
-                }
-              >
-                <div>
-                  <h3>{meal.name}</h3>
-                  <p>
-                    Type: <strong>{meal.mealType}</strong>
-                  </p>
-                </div>
-                <div>
-                  <button onClick={(e) => {
-                    e.stopPropagation()
-                    deleteMeal(meal.id)
-                  }}>
-                    Delete
+              {editingMeal === meal.id ? (
+                <div style={{ marginBottom: '10px' }}>
+                  <h3>Edit Meal</h3>
+                  <label>
+                    Name:{' '}
+                    <input
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                    />
+                  </label>
+                  <label style={{ marginLeft: '10px' }}>
+                    Type:{' '}
+                    <select
+                      value={editType}
+                      onChange={(e) => setEditType(e.target.value)}
+                    >
+                      <option value="breakfast">Breakfast</option>
+                      <option value="lunch">Lunch</option>
+                      <option value="dinner">Dinner</option>
+                      <option value="snack">Snack</option>
+                    </select>
+                  </label>
+                  <button
+                    onClick={() => saveEditMeal(meal.id)}
+                    style={{ marginLeft: '10px' }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={cancelEditMeal}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Cancel
                   </button>
                 </div>
-              </div>
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() =>
+                    setExpandedMeal(expandedMeal === meal.id ? null : meal.id)
+                  }
+                >
+                  <div>
+                    <h3>{meal.name}</h3>
+                    <p>
+                      Type: <strong>{meal.mealType}</strong>
+                    </p>
+                  </div>
+                  <div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        startEditingMeal(meal)
+                      }}
+                      style={{ marginRight: '8px' }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        deleteMeal(meal.id)
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {expandedMeal === meal.id && (
                 <MealDetails mealId={meal.id} />
@@ -136,6 +229,8 @@ export default function ViewMeals() {
 function MealDetails({ mealId }) {
   const [foods, setFoods] = useState([])
   const [loading, setLoading] = useState(true)
+  const [editingFood, setEditingFood] = useState(null)
+  const [editQuantity, setEditQuantity] = useState('')
 
   useEffect(() => {
     const fetchMealFoods = async () => {
@@ -157,6 +252,56 @@ function MealDetails({ mealId }) {
     fetchMealFoods()
   }, [mealId])
 
+  const startEditingFood = (mealFood) => {
+    setEditingFood(mealFood.id)
+    setEditQuantity(mealFood.quantity.toString())
+  }
+
+  const saveEditFood = async (mealFoodId) => {
+    if (!editQuantity || parseFloat(editQuantity) <= 0) {
+      alert('Quantity must be greater than 0')
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_BASE}/meal-foods/${mealFoodId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          quantity: parseFloat(editQuantity),
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to update food quantity')
+      const updatedMealFood = await response.json()
+      
+      setFoods((prev) =>
+        prev.map((f) => (f.id === mealFoodId ? updatedMealFood : f))
+      )
+      setEditingFood(null)
+      setEditQuantity('')
+    } catch (error) {
+      console.error('saveEditFood error', error)
+      alert('Error updating food: ' + error.message)
+    }
+  }
+
+  const removeFood = async (mealFoodId) => {
+    if (!window.confirm('Remove this food from the meal?')) return
+
+    try {
+      const response = await fetch(`${API_BASE}/meal-foods/${mealFoodId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) throw new Error('Failed to remove food')
+      setFoods((prev) => prev.filter((f) => f.id !== mealFoodId))
+    } catch (error) {
+      console.error('removeFood error', error)
+      alert('Error removing food: ' + error.message)
+    }
+  }
+
   if (loading) return <p>Loading foods...</p>
 
   return (
@@ -167,8 +312,50 @@ function MealDetails({ mealId }) {
       ) : (
         <ul>
           {foods.map((mf) => (
-            <li key={mf.id}>
-              {mf.food?.name || 'Unknown'} - {mf.quantity} {mf.unit}
+            <li key={mf.id} style={{ marginBottom: '8px' }}>
+              {editingFood === mf.id ? (
+                <div>
+                  <input
+                    type="number"
+                    value={editQuantity}
+                    onChange={(e) => setEditQuantity(e.target.value)}
+                    step="0.01"
+                    style={{ width: '80px', marginRight: '8px' }}
+                  />
+                  {mf.unit}
+                  <button
+                    onClick={() => saveEditFood(mf.id)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Save
+                  </button>
+                  <button
+                    onClick={() => setEditingFood(null)}
+                    style={{ marginLeft: '6px' }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  {mf.food?.name || 'Unknown'} -{' '}
+                  <strong>
+                    {mf.quantity} {mf.unit}
+                  </strong>
+                  <button
+                    onClick={() => startEditingFood(mf)}
+                    style={{ marginLeft: '8px' }}
+                  >
+                    Edit Qty
+                  </button>
+                  <button
+                    onClick={() => removeFood(mf.id)}
+                    style={{ marginLeft: '6px' }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              )}
             </li>
           ))}
         </ul>

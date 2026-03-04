@@ -53,4 +53,8 @@ public class MealFoodService {
 
         return Optional.of(mealFoodRepository.save(mf));
     }
+
+    public void deleteMealFood(Long id) {
+        mealFoodRepository.deleteById(id);
+    }
 }

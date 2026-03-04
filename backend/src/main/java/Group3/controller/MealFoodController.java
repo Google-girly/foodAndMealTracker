@@ -3,6 +3,7 @@ package Group3.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,5 +50,11 @@ public class MealFoodController {
     @PatchMapping("/{id}")
     public ResponseEntity<MealFood> patchMealFood(@PathVariable Long id, @RequestBody MealFood partial) {
         return mealFoodService.patchMealFood(id, partial).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMealFood(@PathVariable Long id) {
+        mealFoodService.deleteMealFood(id);
+        return ResponseEntity.noContent().build();
     }
 }
