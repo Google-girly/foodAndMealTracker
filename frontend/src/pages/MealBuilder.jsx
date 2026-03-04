@@ -1,40 +1,52 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../supaBaseClient'
 
+const API_BASE = 'http://localhost:8080'
+
 export default function MealBuilder() {
   const [user, setUser] = useState(null)
+  const [userId, setUserId] = useState(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [results, setResults] = useState([])
   const [selected, setSelected] = useState([])
   const [newFoodName, setNewFoodName] = useState('')
   const [mealName, setMealName] = useState('')
   const [mealType, setMealType] = useState('snack')
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser()
       setUser(data.user)
+      // For now, we'll use a placeholder ID (1) since the backend uses Long IDs
+      // In production, you'd need to sync Supabase users with your backend DB
+      setUserId(1)
     }
     fetchUser()
   }, [])
 
   const searchFoods = async () => {
-    if (!user || searchTerm.trim() === '') {
+    if (searchTerm.trim() === '') {
       setResults([])
       return
     }
 
-    const filter = `is_public.eq.true,created_by.eq.${user.id}`
-    const { data, error } = await supabase
-      .from('foods')
-      .select('*')
-      .ilike('name', `%${searchTerm}%`)
-      .or(filter)
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_BASE}/foods`)
+      if (!response.ok) throw new Error('Failed to fetch foods')
+      const allFoods = await response.json()
 
-    if (error) {
+      // Filter by name match
+      const filtered = allFoods.filter((f) =>
+        f.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+      setResults(filtered)
+    } catch (error) {
       console.error('searchFoods error', error)
-    } else {
-      setResults(data)
+      alert('Error searching foods')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -44,22 +56,29 @@ export default function MealBuilder() {
   }
 
   const addNewFood = async () => {
-    if (!newFoodName.trim() || !user) return
-    const { data, error } = await supabase
-      .from('foods')
-      .insert({
-        name: newFoodName,
-        created_by: user.id,
-        is_public: true,
-      })
-      .select()
-      .single()
+    if (!newFoodName.trim() || !userId) return
 
-    if (error) {
-      console.error('addNewFood error', error)
-    } else {
-      addToMeal(data)
+    setLoading(true)
+    try {
+      const response = await fetch(`${API_BASE}/foods`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newFoodName,
+          createdById: userId,
+          isPublic: true,
+        }),
+      })
+
+      if (!response.ok) throw new Error('Failed to create food')
+      const newFood = await response.json()
+      addToMeal(newFood)
       setNewFoodName('')
+    } catch (error) {
+      console.error('addNewFood error', error)
+      alert('Error creating food')
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -78,39 +97,55 @@ export default function MealBuilder() {
       alert('Please give the meal a name')
       return
     }
-    if (!user) return
-
-    // create meal record
-    const { data: meal, error } = await supabase
-      .from('meals')
-      .insert({
-        users_id: user.id,
-        name: mealName,
-        meal_type: mealType,
-      })
-      .select()
-      .single()
-
-    if (error) {
-      console.error('saveMeal error', error)
+    if (!userId) {
+      alert('User not found')
       return
     }
 
-    const inserts = selected.map((f) => ({
-      meal_id: meal.id,
-      food_id: f.id,
-      quantity: f.quantity,
-      unit: f.unit,
-    }))
-    const { error: err2 } = await supabase.from('meal_foods').insert(inserts)
+    setLoading(true)
+    try {
+      // Create meal record
+      const mealResponse = await fetch(`${API_BASE}/meals`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          usersId: userId,
+          name: mealName,
+          mealType: mealType,
+        }),
+      })
 
-    if (err2) {
-      console.error('meal_foods insert error', err2)
-    } else {
+      if (!mealResponse.ok) throw new Error('Failed to create meal')
+      const meal = await mealResponse.json()
+
+      // Create meal_foods entries
+      const mealFoodPromises = selected.map((f) =>
+        fetch(`${API_BASE}/meal-foods`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mealId: meal.id,
+            foodId: f.id,
+            quantity: parseFloat(f.quantity),
+            unit: f.unit,
+          }),
+        })
+      )
+
+      const results = await Promise.all(mealFoodPromises)
+      const allOk = results.every((r) => r.ok)
+
+      if (!allOk) throw new Error('Some meal foods failed to save')
+
       alert('Meal saved successfully!')
       setSelected([])
       setMealName('')
       setMealType('snack')
+    } catch (error) {
+      console.error('saveMeal error', error)
+      alert('Error saving meal: ' + error.message)
+    } finally {
+      setLoading(false)
     }
   }
 

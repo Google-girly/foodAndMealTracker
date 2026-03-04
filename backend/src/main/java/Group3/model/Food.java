@@ -37,12 +37,6 @@ public class Food {
     @Column(name = "created_by")
     private Long createdById;
 
-    // And also expose the relationship (read-only, mapped to the same column)
-    @ManyToOne
-    @JoinColumn(name = "created_by", insertable = false, updatable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    private User createdBy;
-
     @Column(name = "is_public", nullable = false)
     private Boolean isPublic = false;
 
@@ -71,9 +65,6 @@ public class Food {
 
     public Long getCreatedById() { return createdById; }
     public void setCreatedById(Long createdById) { this.createdById = createdById; }
-
-    public User getCreatedBy() { return createdBy; }
-    public void setCreatedBy(User createdBy) { this.createdBy = createdBy; }
 
     public Boolean getIsPublic() { return isPublic; }
     public void setIsPublic(Boolean isPublic) { this.isPublic = isPublic; }
