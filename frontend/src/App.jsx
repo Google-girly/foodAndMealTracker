@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import MealBuilder from './pages/MealBuilder'
+import ViewMeals from './pages/ViewMeals'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -24,6 +25,15 @@ function App() {
           element={
             <ProtectedRoute>
               <MealBuilder />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/view-meals"
+          element={
+            <ProtectedRoute>
+              <ViewMeals />
             </ProtectedRoute>
           }
         />

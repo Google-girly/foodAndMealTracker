@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
 
 const API_BASE = 'http://localhost:8080'
@@ -13,6 +14,10 @@ export default function MealBuilder() {
   const [mealName, setMealName] = useState('')
   const [mealType, setMealType] = useState('snack')
   const [loading, setLoading] = useState(false)
+  const [newFoodCalories, setNewFoodCalories] = useState('')
+  const [newFoodProtein, setNewFoodProtein] = useState('')
+  const [newFoodCarbs, setNewFoodCarbs] = useState('')
+  const [newFoodFat, setNewFoodFat] = useState('')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -65,6 +70,10 @@ export default function MealBuilder() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: newFoodName,
+          calories: newFoodCalories ? parseInt(newFoodCalories) : null,
+          protein: newFoodProtein ? parseFloat(newFoodProtein) : null,
+          carbs: newFoodCarbs ? parseFloat(newFoodCarbs) : null,
+          fat: newFoodFat ? parseFloat(newFoodFat) : null,
           createdById: userId,
           isPublic: true,
         }),
@@ -74,6 +83,10 @@ export default function MealBuilder() {
       const newFood = await response.json()
       addToMeal(newFood)
       setNewFoodName('')
+      setNewFoodCalories('')
+      setNewFoodProtein('')
+      setNewFoodCarbs('')
+      setNewFoodFat('')
     } catch (error) {
       console.error('addNewFood error', error)
       alert('Error creating food')
@@ -151,7 +164,17 @@ export default function MealBuilder() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Build a Meal</h1>
+      <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h1>Build a Meal</h1>
+        <div>
+          <Link to="/dashboard" style={{ marginRight: '10px' }}>
+            <button>Dashboard</button>
+          </Link>
+          <Link to="/view-meals" style={{ marginRight: '10px' }}>
+            <button>View Meals</button>
+          </Link>
+        </div>
+      </div>
 
       <div style={{ marginBottom: '20px' }}>
         <label>
@@ -201,6 +224,37 @@ export default function MealBuilder() {
           value={newFoodName}
           onChange={(e) => setNewFoodName(e.target.value)}
           placeholder="New food name"
+        />
+        <input
+          type="number"
+          value={newFoodCalories}
+          onChange={(e) => setNewFoodCalories(e.target.value)}
+          placeholder="Calories (optional)"
+          style={{ marginLeft: '8px' }}
+        />
+        <input
+          type="number"
+          value={newFoodProtein}
+          onChange={(e) => setNewFoodProtein(e.target.value)}
+          placeholder="Protein (g)"
+          step="0.1"
+          style={{ marginLeft: '8px' }}
+        />
+        <input
+          type="number"
+          value={newFoodCarbs}
+          onChange={(e) => setNewFoodCarbs(e.target.value)}
+          placeholder="Carbs (g)"
+          step="0.1"
+          style={{ marginLeft: '8px' }}
+        />
+        <input
+          type="number"
+          value={newFoodFat}
+          onChange={(e) => setNewFoodFat(e.target.value)}
+          placeholder="Fat (g)"
+          step="0.1"
+          style={{ marginLeft: '8px' }}
         />
         <button onClick={addNewFood} style={{ marginLeft: '8px' }}>
           Create food and add
