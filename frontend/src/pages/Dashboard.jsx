@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
 
 export default function Dashboard() {
@@ -25,7 +26,15 @@ export default function Dashboard() {
       {user && (
         <>
           <p>Welcome: {user.email}</p>
-          <button onClick={handleLogout}>Logout</button>
+          <div style={{ marginTop: '20px' }}>
+            <Link to="/meals" style={{ marginRight: '10px' }}>
+              <button>Create Meal</button>
+            </Link>
+            <Link to="/view-meals" style={{ marginRight: '10px' }}>
+              <button>View Meals</button>
+            </Link>
+            <button onClick={handleLogout}>Logout</button>
+          </div>
         </>
       )}
     </div>

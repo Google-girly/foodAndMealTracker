@@ -79,4 +79,8 @@ public class MealService {
         Meal saved = mealRepository.save(meal);
         return Optional.of(saved);
     }
+
+    public void deleteMeal(Long id) {
+        mealRepository.deleteById(id);
+    }
 }

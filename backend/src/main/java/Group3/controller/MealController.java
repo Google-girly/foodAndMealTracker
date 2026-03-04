@@ -3,6 +3,7 @@ package Group3.controller;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -95,10 +96,10 @@ public class MealController {
             @RequestBody Meal updatedMeal,
             HttpServletRequest request) {
         Long usersId = getCurrentUsersId(request);
-        if (usersId == null){
+        if (usersId == null) {
             return ResponseEntity.status(401).build();
         }
-            
+
         return mealService.updateMeal(id, updatedMeal, usersId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -110,12 +111,19 @@ public class MealController {
             @RequestBody Meal partialMeal,
             HttpServletRequest request) {
         Long usersId = getCurrentUsersId(request);
-        if (usersId == null){
+        if (usersId == null) {
             return ResponseEntity.status(401).build();
         }
 
         return mealService.patchMeal(id, partialMeal, usersId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMeal(@PathVariable Long id) {
+        mealService.deleteMeal(id);
+        return ResponseEntity.noContent().build();
     }
 }
