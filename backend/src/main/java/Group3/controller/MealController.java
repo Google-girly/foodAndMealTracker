@@ -28,41 +28,94 @@ public class MealController {
 
     // GET /meals
     @GetMapping
-    public List<Meal> getAllMeals(HttpServletRequest request) {
+    public ResponseEntity<List<Meal>> getAllMeals(HttpServletRequest request) {
         Long usersId = getCurrentUsersId(request);
-        return mealService.getAllMeals(usersId);
+        if (usersId == null)
+            return ResponseEntity.status(401).build();
+        return ResponseEntity.ok(mealService.getAllMeals(usersId));
     }
 
     // GET /meals/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Meal> getMealById(@PathVariable Long id, HttpServletRequest request) {
         Long usersId = getCurrentUsersId(request);
+        if (usersId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
         return mealService.getMealbyId(id, usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     // POST /meals
     @PostMapping
-    public ResponseEntity<Meal> creatMeal(@RequestBody Meal meal, HttpServletRequest request) {
+    public ResponseEntity<Meal> createMeal(@RequestBody Meal meal, HttpServletRequest request) {
         Long usersId = getCurrentUsersId(request);
+        if (usersId == null) {
+            return ResponseEntity.status(401).build();
+        }
+
         Meal created = mealService.createMeal(meal, usersId);
         return ResponseEntity.status(201).body(created);
     }
 
-    // Temp until OAuth is integrated:
     private Long getCurrentUsersId(HttpServletRequest request) {
+        // OAuth middleware sets "userId" on request
+        Object attr = request.getAttribute("userId");
+        if (attr != null) {
+            String authUserId = attr.toString();
+
+            // only works if authUserId is numeric (ex: "1", "2")
+            try {
+                return Long.parseLong(authUserId);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        // fallback to the existing dev/test header
         String header = request.getHeader("X-User-Id");
         if (header == null || header.isBlank())
-            return 1L;
+            return null;
         return Long.parseLong(header);
-}
-    //PUT
-    @PutMapping("/{id}")
-    public ResponseEntity<Meal> updateMeal(@PathVariable Long id, @RequestBody Meal updatedMeal){
-        return mealService.updateMeal(id,updatedMeal).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-    //PATCH
+
+    // Temp until OAuth is integrated:
+    /*
+     * private Long getCurrentUsersId(HttpServletRequest request) {
+     * String header = request.getHeader("X-User-Id");
+     * if (header == null || header.isBlank())
+     * return 1L;
+     * return Long.parseLong(header);
+     * }
+     */
+
+    // PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<Meal> updateMeal(@PathVariable Long id,
+            @RequestBody Meal updatedMeal,
+            HttpServletRequest request) {
+        Long usersId = getCurrentUsersId(request);
+        if (usersId == null){
+            return ResponseEntity.status(401).build();
+        }
+            
+        return mealService.updateMeal(id, updatedMeal, usersId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // PATCH
     @PatchMapping("/{id}")
-    public ResponseEntity<Meal> patchMeal(@PathVariable Long id,@RequestBody Meal partialMeal){
-        return mealService.patchMeal(id,partialMeal).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<Meal> patchMeal(@PathVariable Long id,
+            @RequestBody Meal partialMeal,
+            HttpServletRequest request) {
+        Long usersId = getCurrentUsersId(request);
+        if (usersId == null){
+            return ResponseEntity.status(401).build();
+        }
+
+        return mealService.patchMeal(id, partialMeal, usersId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
