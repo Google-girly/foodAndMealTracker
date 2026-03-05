@@ -36,15 +36,16 @@ public class MealServiceTest {
         updatedMeal.setMealDate(LocalDate.of(2026, 3, 1));
         updatedMeal.setDescription("New Description");
 
-        when(mealRepository.findById(1L)).thenReturn(Optional.of(existingMeal));
-        when(mealRepository.save(any(Meal.class))).thenReturn(existingMeal);
-
-        Optional<Meal> result = mealService.updateMeal(1L,updatedMeal);
-
+        Long usersId = 1L;
+        when(mealRepository.findByIdAndUsersId(1L, usersId)).thenReturn(Optional.of(existingMeal));
+        when(mealRepository.save(any(Meal.class))).thenAnswer(inv -> inv.getArgument(0));
+        Optional<Meal> result = mealService.updateMeal(1L,updatedMeal, usersId);
+        
         assertTrue(result.isPresent());
         assertEquals("New Name",result.get().getName());
         assertEquals("DINNER", result.get().getMealType());
         assertEquals("New Description", result.get().getDescription());
+        assertEquals(usersId, result.get().getUsersId());
     }
 
     @Test
@@ -56,21 +57,21 @@ public class MealServiceTest {
         Meal patchMeal = new Meal();
         patchMeal.setName("Updated Name");
 
-        when(mealRepository.findById(1L)).thenReturn(Optional.of(existingMeal));
-        when(mealRepository.save(any(Meal.class))).thenReturn(existingMeal);
-
-        Optional<Meal> result = mealService.patchMeal(1L,patchMeal);
+        Long usersId = 1L;
+        when(mealRepository.findByIdAndUsersId(1L, usersId)).thenReturn(Optional.of(existingMeal));
+        when(mealRepository.save(any(Meal.class))).thenAnswer(inv -> inv.getArgument(0));
+        Optional<Meal> result = mealService.patchMeal(1L,patchMeal, usersId);
 
         assertTrue(result.isPresent());
         assertEquals("Updated Name", result.get().getName());
         assertEquals("BREAKFAST",result.get().getMealType());
+        assertEquals(usersId, result.get().getUsersId());
     }
     @Test
     void testUpdateMeal_NotFound(){
-        when(mealRepository.findById(1L)).thenReturn(Optional.empty());
-
-        Optional<Meal> result = mealService.updateMeal(1L,new Meal());
+        Long usersId = 1L;
+        when(mealRepository.findByIdAndUsersId(1L, usersId)).thenReturn(Optional.empty());
+        Optional<Meal> result = mealService.updateMeal(1L,new Meal(), usersId);
         assertTrue(result.isEmpty());
-
     }
 }
