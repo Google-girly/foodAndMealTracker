@@ -1,0 +1,38 @@
+services:
+  # Backend (Spring Boot / Gradle)
+  - type: web
+    name: food-meal-api
+    env: java
+    rootDir: backend
+    plan: free
+    buildCommand: chmod +x ./gradlew && ./gradlew clean build -x test
+    startCommand: java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
+    autoDeploy: true
+    envVars:
+      # set these in Render Dashboard as SECRET values (don’t commit real values)
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      # set to your frontend URL after it exists, e.g. https://food-meal-frontend.onrender.com
+      - key: FRONTEND_ORIGIN
+        sync: false
+
+  # Frontend (Vite React static site)
+  - type: static_site
+    name: food-meal-frontend
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    publishPath: dist
+    autoDeploy: true
+    envVars:
+      # set to your API URL after it exists, e.g. https://food-meal-api.onrender.com
+      - key: VITE_API_BASE
+        sync: false
+    routes:
+      # React Router refresh fix
+      - type: rewrite
+        source: /*
+        destination: /index.html
