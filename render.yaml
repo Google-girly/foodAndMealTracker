@@ -1,12 +1,11 @@
 services:
-  # Backend (Spring Boot / Gradle)
+  # Backend (Spring Boot via Docker)
   - type: web
     name: food-meal-api
-    runtime: java
+    runtime: docker
     rootDir: backend
     plan: free
-    buildCommand: chmod +x ./gradlew && ./gradlew clean build -x test
-    startCommand: java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
+    dockerfilePath: Dockerfile
     autoDeploy: true
     envVars:
       - key: SPRING_DATASOURCE_URL
@@ -18,7 +17,7 @@ services:
       - key: FRONTEND_ORIGIN
         sync: false
 
-  # Frontend (Vite React)
+  # Frontend (Vite React static site)
   - type: web
     name: food-meal-frontend
     runtime: static
