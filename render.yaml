@@ -2,7 +2,7 @@ services:
   # Backend (Spring Boot / Gradle)
   - type: web
     name: food-meal-api
-    env: java
+    runtime: java
     rootDir: backend
     plan: free
     buildCommand: chmod +x ./gradlew && ./gradlew clean build -x test
@@ -18,12 +18,13 @@ services:
       - key: FRONTEND_ORIGIN
         sync: false
 
-  # Frontend (Vite React static site)
-  - type: static
+  # Frontend (Vite React)
+  - type: web
     name: food-meal-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm ci && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     autoDeploy: true
     envVars:
       - key: VITE_API_BASE
