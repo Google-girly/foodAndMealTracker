@@ -21,7 +21,7 @@ services:
         sync: false
 
   # Frontend (Vite React static site)
-  - type: static_site
+  - type: static
     name: food-meal-frontend
     rootDir: frontend
     buildCommand: npm ci && npm run build
