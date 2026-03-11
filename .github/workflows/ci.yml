@@ -20,8 +20,10 @@ jobs:
               with:
                  distribution: "temurin"
                  java-version: "21"
-            - name: Make Gradle executable
+            - name: Make gradlew executable
               run: chmod +x gradlew
+              working-directory: backend
 
             - name: Run tests
               run: ./gradlew test
+              working-directory: backend
