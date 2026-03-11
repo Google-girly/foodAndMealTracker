@@ -4,6 +4,10 @@ import Dashboard from './pages/Dashboard'
 import MealBuilder from './pages/MealBuilder'
 import ViewMeals from './pages/ViewMeals'
 import ProtectedRoute from './components/ProtectedRoute'
+import AdminPanel from './pages/AdminPanel'
+import AdminUsers from './pages/AdminUsers'
+import AdminFoods from './pages/AdminFoods'
+import AdminMeals from './pages/AdminMeals'
 
 function App() {
   return (
@@ -34,6 +38,42 @@ function App() {
           element={
             <ProtectedRoute>
               <ViewMeals />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/users"
+          element={
+            <ProtectedRoute>
+              <AdminUsers />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/foods"
+          element={
+            <ProtectedRoute>
+              <AdminFoods />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/meals"
+          element={
+            <ProtectedRoute>
+              <AdminMeals />
             </ProtectedRoute>
           }
         />

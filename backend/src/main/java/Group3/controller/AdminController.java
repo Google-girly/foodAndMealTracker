@@ -16,22 +16,16 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
+    // GET /admin/ping
     @GetMapping("/ping")
     public ResponseEntity<String> adminPing(HttpServletRequest request) {
 
-        String userIdStr = (String) request.getAttribute("userId");
-        if (userIdStr == null) {
+        Long usersId = getCurrentUsersId(request);
+        if (usersId == null) {
             return ResponseEntity.status(401).body("Unauthorized User");
         }
 
-        Long userId;
-        try {
-            userId = Long.parseLong(userIdStr);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.status(401).body("Unauthorized User");
-        }
-
-        User user = userRepository.findById(userId).orElse(null);
+        User user = userRepository.findById(usersId).orElse(null);
         if (user == null) {
             return ResponseEntity.status(401).body("Unauthorized User");
         }
@@ -40,6 +34,28 @@ public class AdminController {
             return ResponseEntity.status(403).body("Forbidden: Admins only");
         }
 
-        return ResponseEntity.ok("Admin access granted for userId=" + userId);
+        return ResponseEntity.ok("Admin access granted");
+    }
+
+    private Long getCurrentUsersId(HttpServletRequest request) {
+        // OAuth middleware sets "userId" on request
+        Object attr = request.getAttribute("userId");
+        if (attr != null) {
+            try {
+                return Long.parseLong(attr.toString());
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        // fallback to the existing dev/test header
+        String header = request.getHeader("X-User-Id");
+        if (header == null || header.isBlank()) return null;
+
+        try {
+            return Long.parseLong(header);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }

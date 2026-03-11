@@ -33,6 +33,12 @@ export default function Dashboard() {
             <Link to="/view-meals" style={{ marginRight: '10px' }}>
               <button>View Meals</button>
             </Link>
+
+            {/* TODO: Only show this if user.admin is true once backend role wiring is complete */}
+            <Link to="/admin" style={{ marginRight: '10px' }}>
+              <button>Admin Page</button>
+            </Link>
+
             <button onClick={handleLogout}>Logout</button>
           </div>
         </>
