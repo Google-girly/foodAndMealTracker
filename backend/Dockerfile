@@ -3,6 +3,8 @@ FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
 COPY gradlew .
+RUN sed -i 's/\r$//' gradlew
+
 COPY gradle gradle
 COPY build.gradle settings.gradle ./
 COPY src src
