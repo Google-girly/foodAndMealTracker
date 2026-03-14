@@ -69,15 +69,20 @@ public class MealController {
             try {
                 return Long.parseLong(authUserId);
             } catch (NumberFormatException e) {
-                return null;
+                return 1L;
             }
         }
 
         // fallback to the existing dev/test header
         String header = request.getHeader("X-User-Id");
         if (header == null || header.isBlank())
-            return null;
-        return Long.parseLong(header);
+            return 1L;
+
+        try {
+            return Long.parseLong(header);
+        } catch (NumberFormatException e) {
+            return 1L;
+        }
     }
 
     // Temp until OAuth is integrated:
