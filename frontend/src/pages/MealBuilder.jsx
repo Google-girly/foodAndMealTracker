@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
 
-const API_BASE = import.meta.env.VITE_API_BASE
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
+
+const getMealRequestHeaders = (userId) => ({
+  'Content-Type': 'application/json',
+  'X-User-Id': String(userId),
+})
 
 export default function MealBuilder() {
   const [user, setUser] = useState(null)
@@ -120,7 +125,7 @@ export default function MealBuilder() {
       // Create meal record
       const mealResponse = await fetch(`${API_BASE}/meals`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getMealRequestHeaders(userId),
         body: JSON.stringify({
           usersId: userId,
           name: mealName,
