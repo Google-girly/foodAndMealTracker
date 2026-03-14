@@ -8,6 +8,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController {
 
+    @GetMapping("/")
+    public Map<String, Object> root() {
+        return Map.of(
+            "status", "ok",
+            "service", "food-meal-api",
+            "health", "/health"
+        );
+    }
+
     /* How to test in PowerShell:
       cd backend
       ./gradlew bootRun to load SpringBoot
