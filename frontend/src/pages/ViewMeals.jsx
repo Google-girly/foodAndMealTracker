@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
 
-const API_BASE = import.meta.env.VITE_API_BASE
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
+
+const getMealRequestHeaders = (userId) => ({
+  'Content-Type': 'application/json',
+  'X-User-Id': String(userId),
+})
 
 export default function ViewMeals() {
   const [meals, setMeals] = useState([])
@@ -25,7 +30,11 @@ export default function ViewMeals() {
   const fetchMeals = async (id) => {
     setLoading(true)
     try {
-      const response = await fetch(`${API_BASE}/meals`)
+      const response = await fetch(`${API_BASE}/meals`, {
+        headers: {
+          'X-User-Id': String(id),
+        },
+      })
       if (!response.ok) throw new Error('Failed to fetch meals')
       const allMeals = await response.json()
       
@@ -72,7 +81,7 @@ export default function ViewMeals() {
     try {
       const response = await fetch(`${API_BASE}/meals/${mealId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getMealRequestHeaders(userId),
         body: JSON.stringify({
           name: editName,
           mealType: editType,
