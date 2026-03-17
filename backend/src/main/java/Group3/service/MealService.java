@@ -1,12 +1,12 @@
 package Group3.service;
 
-import Group3.model.Meal;
-//commented out b/c it's the class importing itself
-//import Group3.service.MealService;
-import Group3.repository.MealRepository;
-import org.springframework.stereotype.*;
+import java.util.List;
+import java.util.Optional;
 
-import java.util.*;
+import org.springframework.stereotype.Service;
+
+import Group3.model.Meal;
+import Group3.repository.MealRepository;
 
 @Service
 public class MealService {
