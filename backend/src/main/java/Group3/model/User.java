@@ -28,6 +28,10 @@ public class User {
     @Column(nullable = false)
     private Boolean admin = false;
 
+    public void setAdmin(Boolean admin){
+        this.admin = (admin == null) ? false: admin;
+    }
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -43,7 +47,7 @@ public class User {
     public void setFullName(String fullName) { this.fullName = fullName; }
 
     public Boolean getAdmin() { return admin; }
-    public void setAdmin(Boolean admin) { this.admin = admin; }
+    // public void setAdmin(Boolean admin) { this.admin = admin; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

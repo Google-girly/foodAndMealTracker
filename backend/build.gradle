@@ -41,6 +41,9 @@ dependencies {
 
 	//adds H2 test dependency
 	testImplementation 'com.h2database:h2'
+	testImplementation 'io.rest-assured:rest-assured:5.3.0'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
