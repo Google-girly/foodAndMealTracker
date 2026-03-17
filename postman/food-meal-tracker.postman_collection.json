@@ -25,7 +25,91 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:26:07 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "56"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf12f5e969c9af-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "38771c63-f06b-4c98"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"status\": \"ok\",\n    \"timestamp\": \"2026-03-17T21:26:07.095775852Z\"\n}"
+            }
+          ]
         },
         {
           "name": "GET Root",
@@ -64,7 +148,91 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/foods",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "foods"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:23:59 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "385"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf0fd6cca6fe38-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "7975d8c9-0fa2-49b5"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"calories\": 95,\n        \"carbs\": 25,\n        \"createdAt\": \"2026-03-04T01:09:21.663036\",\n        \"createdById\": 1,\n        \"fat\": 0.3,\n        \"id\": 3,\n        \"isPublic\": true,\n        \"name\": \"Apple\",\n        \"protein\": 0.5\n    },\n    {\n        \"calories\": null,\n        \"carbs\": null,\n        \"createdAt\": \"2026-03-04T01:18:37.555494\",\n        \"createdById\": 1,\n        \"fat\": null,\n        \"id\": 4,\n        \"isPublic\": true,\n        \"name\": \"Peanut Butter \",\n        \"protein\": null\n    },\n    {\n        \"calories\": 500,\n        \"carbs\": 33,\n        \"createdAt\": \"2026-03-04T01:26:16.138636\",\n        \"createdById\": 1,\n        \"fat\": 22,\n        \"id\": 5,\n        \"isPublic\": true,\n        \"name\": \"Peanut butter\",\n        \"protein\": 55\n    },\n    {\n        \"calories\": 3000,\n        \"carbs\": 22,\n        \"createdAt\": \"2026-03-04T09:46:06.448809\",\n        \"createdById\": 1,\n        \"fat\": 1,\n        \"id\": 6,\n        \"isPublic\": true,\n        \"name\": \"pizza\",\n        \"protein\": 39\n    },\n    {\n        \"calories\": null,\n        \"carbs\": null,\n        \"createdAt\": \"2026-03-05T14:05:28.081214\",\n        \"createdById\": 1,\n        \"fat\": null,\n        \"id\": 7,\n        \"isPublic\": true,\n        \"name\": \"TestMauricio\",\n        \"protein\": null\n    },\n    {\n        \"calories\": 1,\n        \"carbs\": 1,\n        \"createdAt\": \"2026-03-05T14:06:10.884818\",\n        \"createdById\": 1,\n        \"fat\": 1,\n        \"id\": 8,\n        \"isPublic\": true,\n        \"name\": \"1\",\n        \"protein\": 1\n    },\n    {\n        \"calories\": 105,\n        \"carbs\": 27,\n        \"createdAt\": \"2026-03-17T20:27:27.658446\",\n        \"createdById\": null,\n        \"fat\": 0.4,\n        \"id\": 9,\n        \"isPublic\": true,\n        \"name\": \"Banana\",\n        \"protein\": 1.3\n    },\n    {\n        \"calories\": 60,\n        \"carbs\": 2,\n        \"createdAt\": null,\n        \"createdById\": null,\n        \"fat\": 3,\n        \"id\": 1,\n        \"isPublic\": false,\n        \"name\": \"Egg Patched\",\n        \"protein\": 11\n    }\n]"
+            }
+          ]
         },
         {
           "name": "GET Food by ID",
@@ -190,7 +358,97 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-User-Id",
+                    "value": "{{userId}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/meals",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "meals"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:26:42 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "213"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf13d27b52f26c-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "96ba2fb9-c03a-4587"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"createdAt\": \"2026-03-17T20:39:30.666512\",\n        \"description\": \"Postman test meal\",\n        \"id\": 4,\n        \"mealDate\": \"2026-03-17\",\n        \"mealType\": \"lunch\",\n        \"name\": \"Test Lunch\",\n        \"updatedAt\": \"2026-03-17T20:39:30.666554\",\n        \"user\": {\n            \"admin\": false,\n            \"createdAt\": \"2026-03-04T01:06:45.920319\",\n            \"email\": \"updateduser@example.com\",\n            \"fullName\": \"Patched User\",\n            \"id\": 1\n        },\n        \"usersId\": 1\n    }\n]"
+            }
+          ]
         },
         {
           "name": "GET Meal by ID",
@@ -358,7 +616,91 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/meal-foods",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "meal-foods"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:27:09 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "6"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf1479ccb57ae9-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "eb765bff-88a6-4739"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "[]"
+            }
+          ]
         },
         {
           "name": "GET MealFood by ID",
@@ -496,7 +838,91 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/users",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "users"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:27:28 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "149"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf14f3f8f67ae9-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "546f6d07-c292-4347"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "[\n    {\n        \"admin\": false,\n        \"createdAt\": \"2026-03-17T20:57:19.454985\",\n        \"email\": \"postmanuser@example.com\",\n        \"fullName\": \"Postman User\",\n        \"id\": 2\n    },\n    {\n        \"admin\": false,\n        \"createdAt\": \"2026-03-04T01:06:45.920319\",\n        \"email\": \"updateduser@example.com\",\n        \"fullName\": \"Patched User\",\n        \"id\": 1\n    }\n]"
+            }
+          ]
         },
         {
           "name": "GET User by ID",
@@ -624,7 +1050,98 @@
             },
             "description": "This endpoint requires admin privileges. Current test user is not admin, so this request returns 403 as expected."
           },
-          "response": []
+          "response": [
+            {
+              "name": "403 Forbidden - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "X-User-Id",
+                    "value": "{{userId}}",
+                    "type": "text"
+                  }
+                ],
+                "url": {
+                  "raw": "{{baseUrl}}/admin/ping",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "admin",
+                    "ping"
+                  ]
+                }
+              },
+              "status": "Forbidden",
+              "code": 403,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:27:46 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain;charset=UTF-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "26"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf1563690ac956-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "d049a66c-12b1-4226"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "Forbidden: Admins only"
+            }
+          ]
         },
         {
           "name": "GET All Users (Admin Only)",
@@ -752,7 +1269,92 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "401 Unauthorized - Example",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/protected",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "protected"
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "Date",
+                  "value": "Tue, 17 Mar 2026 21:28:16 GMT"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain;charset=UTF-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "21"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "CF-RAY",
+                  "value": "9ddf161db97ae61d-IAD"
+                },
+                {
+                  "key": "Content-Encoding",
+                  "value": "br"
+                },
+                {
+                  "key": "rndr-id",
+                  "value": "6c6fa6bd-bfa4-4e02"
+                },
+                {
+                  "key": "vary",
+                  "value": "Origin"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Method"
+                },
+                {
+                  "key": "vary",
+                  "value": "Access-Control-Request-Headers"
+                },
+                {
+                  "key": "vary",
+                  "value": "Accept-Encoding"
+                },
+                {
+                  "key": "x-render-origin-server",
+                  "value": "Render"
+                },
+                {
+                  "key": "cf-cache-status",
+                  "value": "DYNAMIC"
+                },
+                {
+                  "key": "Server",
+                  "value": "cloudflare"
+                },
+                {
+                  "key": "alt-svc",
+                  "value": "h3=\":443\"; ma=86400"
+                }
+              ],
+              "cookie": [],
+              "body": "Unauthorized User"
+            }
+          ]
         }
       ]
     }
@@ -784,28 +1386,27 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": ""
+      "value": "https://food-meal-api.onrender.com"
     },
     {
       "key": "userId",
-      "value": ""
+      "value": "1"
     },
     {
       "key": "foodId",
-      "value": ""
+      "value": "9"
     },
     {
       "key": "mealId",
-      "value": ""
+      "value": "2"
     },
     {
       "key": "mealFoodId",
-      "value": ""
+      "value": "5"
     },
     {
       "key": "targetUserId",
-      "value": "",
-      "type": "default"
+      "value": "1"
     }
   ]
 }
