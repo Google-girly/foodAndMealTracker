@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import io.restassured.module.mockmvc.RestAssuredMockMvc;
-
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.hamcrest.Matchers.*;
 
@@ -27,7 +26,7 @@ public class UserIntegrationTest {
     }
 
     @Test
-    void shouldCreateUser(){
+    void shouldCreateUser() {
         given()
             .contentType("application/json")
             .body("""

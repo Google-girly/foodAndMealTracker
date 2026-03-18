@@ -3,51 +3,108 @@ package Group3;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 
-import io.restassured.RestAssured;
-import static io.restassured.RestAssured.*;
+import io.restassured.module.mockmvc.RestAssuredMockMvc;
+import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
 import static org.hamcrest.Matchers.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 public class MealFoodIntegrationTest {
-    
-    @LocalServerPort
-    int port;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     @BeforeEach
-    void setup(){
-        RestAssured.baseURI = "http://localhost";
-        RestAssured.port = port;
-        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
+    void setup() {
+        RestAssuredMockMvc.mockMvc(mockMvc);
     }
 
-    //Happy
-    @Test
-    void shouldCreateMealFood(){
+@Test
+void shouldCreateMealFood() {
+
+    
+    Integer userId =
         given()
             .contentType("application/json")
             .body("""
                 {
-                  "mealId": 1,
-                  "foodId": 1,
-                  "quantity": 2,
-                  "unit": "serving"
-                }      
+                  "email": "test@test.com",
+                  "fullName": "Test User",
+                  "admin": true
+                }
             """)
         .when()
-            .post("/meal_foods")
+            .post("/users")
         .then()
-            .statusCode(201);
-    }
-    //Error
+            .extract()
+            .path("id");
+
+    
+    Integer mealId =
+        given()
+            .header("X-User-Id", userId.toString())
+            .contentType("application/json")
+            .body("""
+                {
+                  "name": "Lunch",
+                  "mealType": "LUNCH",
+                  "mealDate": "2026-03-01",
+                  "description": "Chicken"
+                }
+            """)
+        .when()
+            .post("/meals")
+        .then()
+            .extract()
+            .path("id");
+
+    
+    Integer foodId =
+        given()
+            .contentType("application/json")
+            .body("""
+                {
+                  "name": "Chicken",
+                  "calories": 200
+                }
+            """)
+        .when()
+            .post("/foods")
+        .then()
+            .extract()
+            .path("id");
+
+    
+    given()
+        .contentType("application/json")
+        .body("""
+            {
+              "mealId": %d,
+              "foodId": %d,
+              "quantity": 2,
+              "unit": "serving"
+            }
+        """.formatted(mealId, foodId))
+    .when()
+        .post("/meal-foods")
+    .then()
+        .log().all()
+        .statusCode(201);
+}
+
     @Test
-    void shouldReturn404ForMissingMealFood(){
-        when()
-            .get("/meal-foods/999")
+    void shouldReturn404ForMissingMealFood() {
+        given()
+        .when()
+            .get("/meal_foods/999")
         .then()
+            .log().all()
             .statusCode(404);
     }
 }
