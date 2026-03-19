@@ -25,9 +25,9 @@ public class UserService {
         return userRepository.findById(id);
     }
 
-    public User createUser(User user) {
-        return userRepository.save(user);
-    }
+    // public User createUser(User user) {
+    //     return userRepository.save(user);
+    // }
 
     public Optional<User> updateUser(Long id, User updatedUser) {
         Optional<User> optional = userRepository.findById(id);
@@ -51,5 +51,12 @@ public class UserService {
         if (partialUser.getAdmin() != null) user.setAdmin(partialUser.getAdmin());
 
         return Optional.of(userRepository.save(user));
+    }
+
+    public User createUser(User user){
+        if (user.getAdmin() == null){
+            user.setAdmin(false);
+        }
+        return userRepository.save(user);
     }
 }
