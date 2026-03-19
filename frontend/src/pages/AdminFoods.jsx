@@ -18,6 +18,7 @@ export default function AdminFoods() {
   const [foods, setFoods] = useState([])
   const [form, setForm] = useState(emptyForm)
   const [editingId, setEditingId] = useState(null)
+  const [selectedFoodId, setSelectedFoodId] = useState('')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -25,9 +26,13 @@ export default function AdminFoods() {
   const [authorized, setAuthorized] = useState(false)
 
   const loadFoods = async (adminUser) => {
-    const response = await fetch(`${API_BASE}/admin/foods`, {
+    let response = await fetch(`${API_BASE}/admin/foods`, {
       headers: getUserRequestHeaders(adminUser.id, false),
     })
+
+    if (response.status === 404) {
+      response = await fetch(`${API_BASE}/foods`)
+    }
 
     if (!response.ok) {
       throw new Error(await response.text() || 'Failed to load foods')
@@ -72,6 +77,7 @@ export default function AdminFoods() {
   const resetForm = () => {
     setForm(emptyForm)
     setEditingId(null)
+    setSelectedFoodId('')
   }
 
   const buildPayload = () => ({
@@ -104,6 +110,9 @@ export default function AdminFoods() {
       })
 
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Admin food routes are not deployed on the backend yet. Redeploy the backend service and try again.')
+        }
         throw new Error(await response.text() || 'Failed to save food')
       }
 
@@ -128,8 +137,24 @@ export default function AdminFoods() {
       isPublic: Boolean(food.isPublic),
     })
     setEditingId(food.id)
+    setSelectedFoodId(String(food.id))
     setMessage('')
     setError('')
+  }
+
+  const handleSelectFood = (e) => {
+    const nextId = e.target.value
+    setSelectedFoodId(nextId)
+
+    if (!nextId) {
+      resetForm()
+      return
+    }
+
+    const selectedFood = foods.find((food) => String(food.id) === nextId)
+    if (selectedFood) {
+      handleEdit(selectedFood)
+    }
   }
 
   const handleDelete = async (food) => {
@@ -148,6 +173,9 @@ export default function AdminFoods() {
       })
 
       if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Admin food routes are not deployed on the backend yet. Redeploy the backend service and try again.')
+        }
         throw new Error(await response.text() || 'Failed to delete food')
       }
 
@@ -283,41 +311,55 @@ export default function AdminFoods() {
         <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px' }}>
           <h2 style={{ marginTop: 0 }}>Existing Foods</h2>
 
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>ID</th>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Name</th>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Calories</th>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Macros</th>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Public</th>
-                  <th style={{ textAlign: 'left', padding: '8px', borderBottom: '1px solid #ddd' }}>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {foods.map((food) => (
-                  <tr key={food.id}>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{food.id}</td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{food.name}</td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{food.calories ?? '—'}</td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                      P: {food.protein ?? '—'} / C: {food.carbs ?? '—'} / F: {food.fat ?? '—'}
-                    </td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>{food.isPublic ? 'Yes' : 'No'}</td>
-                    <td style={{ padding: '8px', borderBottom: '1px solid #eee' }}>
-                      <button onClick={() => handleEdit(food)} style={{ marginRight: '8px' }}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(food)}>
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
+          <label style={{ display: 'block', marginBottom: '16px' }}>
+            Select a food to edit
+            <select
+              value={selectedFoodId}
+              onChange={handleSelectFood}
+              style={{ display: 'block', width: '100%', marginTop: '8px', padding: '10px' }}
+            >
+              <option value="">Choose a food...</option>
+              {[...foods]
+                .sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+                .map((food) => (
+                  <option key={food.id} value={food.id}>
+                    {food.name} {food.calories != null ? `(${food.calories} cal)` : ''}
+                  </option>
                 ))}
-              </tbody>
-            </table>
-          </div>
+            </select>
+          </label>
+
+          {selectedFoodId ? (
+            (() => {
+              const selectedFood = foods.find((food) => String(food.id) === selectedFoodId)
+
+              if (!selectedFood) {
+                return <p>Food not found.</p>
+              }
+
+              return (
+                <div style={{ background: '#fafafa', borderRadius: '8px', padding: '16px' }}>
+                  <p><strong>Name:</strong> {selectedFood.name}</p>
+                  <p><strong>Calories:</strong> {selectedFood.calories ?? '—'}</p>
+                  <p><strong>Protein:</strong> {selectedFood.protein ?? '—'}</p>
+                  <p><strong>Carbs:</strong> {selectedFood.carbs ?? '—'}</p>
+                  <p><strong>Fat:</strong> {selectedFood.fat ?? '—'}</p>
+                  <p><strong>Public:</strong> {selectedFood.isPublic ? 'Yes' : 'No'}</p>
+
+                  <div style={{ marginTop: '12px', display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <button type="button" onClick={() => handleEdit(selectedFood)}>
+                      Load into form
+                    </button>
+                    <button type="button" onClick={() => handleDelete(selectedFood)}>
+                      Delete selected food
+                    </button>
+                  </div>
+                </div>
+              )
+            })()
+          ) : (
+            <p style={{ color: '#666' }}>Use the dropdown to choose a food to edit or delete.</p>
+          )}
         </div>
       </div>
     </div>
