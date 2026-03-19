@@ -15,17 +15,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the FoodService class.
+ *
+ * Verifies CRUD operations and behavior using mocked FoodRepository.
+ */
 public class FoodServiceTest {
 
     private FoodRepository foodRepository;
     private FoodService foodService;
 
+    /**
+     * Sets up the test environment before each test.
+     */
     @BeforeEach
     void setUp() {
         foodRepository = Mockito.mock(FoodRepository.class);
         foodService = new FoodService(foodRepository);
     }
 
+    /**
+     * Tests retrieving all food items.
+     */
     @Test
     void testGetAllFoods() {
         when(foodRepository.findAll()).thenReturn(List.of(new Food(), new Food()));
@@ -34,6 +45,9 @@ public class FoodServiceTest {
         verify(foodRepository, times(1)).findAll();
     }
 
+    /**
+     * Tests retrieving a food item by ID.
+     */
     @Test
     void testGetFoodById() {
         Food f = new Food();
@@ -47,6 +61,9 @@ public class FoodServiceTest {
         verify(foodRepository).findById(1L);
     }
 
+    /**
+     * Tests creating a new food item.
+     */
     @Test
     void testCreateFood() {
         Food toCreate = new Food();
@@ -59,6 +76,9 @@ public class FoodServiceTest {
         verify(foodRepository).save(toCreate);
     }
 
+    /**
+     * Tests successful update of a food item.
+     */
     @Test
     void testUpdateFood_Success_updatesAllFields() {
         Food existing = new Food();
@@ -100,6 +120,9 @@ public class FoodServiceTest {
         assertSame(existing, captor.getValue());
     }
 
+    /**
+     * Tests update behavior when food is not found.
+     */
     @Test
     void testUpdateFood_NotFound_returnsEmptyAndDoesNotSave() {
         when(foodRepository.findById(1L)).thenReturn(Optional.empty());
@@ -110,6 +133,9 @@ public class FoodServiceTest {
         verify(foodRepository, never()).save(any());
     }
 
+    /**
+     * Tests partial update of a food item.
+     */
     @Test
     void testPatchFood_Success_onlyUpdatesProvidedFields() {
         Food existing = new Food();
@@ -143,6 +169,9 @@ public class FoodServiceTest {
         assertFalse(saved.getIsPublic());
     }
 
+    /**
+     * Tests patch behavior when food is not found.
+     */
     @Test
     void testPatchFood_NotFound_returnsEmptyAndDoesNotSave() {
         when(foodRepository.findById(1L)).thenReturn(Optional.empty());

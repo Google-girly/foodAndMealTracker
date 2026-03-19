@@ -13,6 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.springframework.test.context.ActiveProfiles;
 
+/**
+ * Integration test for the /health endpoint.
+ *
+ * Verifies that the health endpoint returns:
+ * - HTTP 200 status
+ * - Expected JSON fields (status, timestamp)
+ */
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class HealthEndpointTest {
@@ -20,6 +27,11 @@ class HealthEndpointTest {
     @LocalServerPort
     private int port;
 
+    /**
+     * Tests that the /health endpoint returns a valid response.
+     *
+     * @throws Exception if the HTTP request fails
+     */
     @Test
     void health_returns200_andContainsExpectedJsonFields() throws Exception {
         HttpClient client = HttpClient.newHttpClient();

@@ -14,17 +14,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the UserService class.
+ *
+ * Verifies CRUD and patch/update behavior using a mocked UserRepository.
+ */
 public class UserServiceTest {
 
     private UserRepository userRepository;
     private UserService userService;
 
+    /**
+     * Sets up the test environment before each test.
+     */
     @BeforeEach
     void setUp() {
         userRepository = Mockito.mock(UserRepository.class);
         userService = new UserService(userRepository);
     }
 
+    /**
+     * Tests retrieving all users.
+     */
     @Test
     void testGetAllUsers() {
         when(userRepository.findAll()).thenReturn(List.of(new User(), new User(), new User()));
@@ -33,6 +44,9 @@ public class UserServiceTest {
         verify(userRepository).findAll();
     }
 
+    /**
+     * Tests retrieving a user by ID.
+     */
     @Test
     void testGetUserById() {
         User u = new User();
@@ -46,6 +60,9 @@ public class UserServiceTest {
         verify(userRepository).findById(1L);
     }
 
+    /**
+     * Tests creating a new user.
+     */
     @Test
     void testCreateUser() {
         User toCreate = new User();
@@ -58,6 +75,9 @@ public class UserServiceTest {
         verify(userRepository).save(toCreate);
     }
 
+    /**
+     * Tests successful update of a user.
+     */
     @Test
     void testUpdateUser_Success_updatesAllFields() {
         User existing = new User();
@@ -86,6 +106,9 @@ public class UserServiceTest {
         assertSame(existing, captor.getValue());
     }
 
+    /**
+     * Tests update behavior when the user is not found.
+     */
     @Test
     void testUpdateUser_NotFound_returnsEmptyAndDoesNotSave() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
@@ -96,6 +119,9 @@ public class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
+    /**
+     * Tests partial update of a user.
+     */
     @Test
     void testPatchUser_Success_onlyUpdatesProvidedFields() {
         User existing = new User();
@@ -118,6 +144,9 @@ public class UserServiceTest {
         assertFalse(saved.getAdmin()); // unchanged
     }
 
+    /**
+     * Tests patch behavior when the user is not found.
+     */
     @Test
     void testPatchUser_NotFound_returnsEmptyAndDoesNotSave() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
