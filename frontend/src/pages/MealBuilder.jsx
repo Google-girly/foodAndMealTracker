@@ -24,13 +24,59 @@ export default function MealBuilder() {
   const [newFoodCarbs, setNewFoodCarbs] = useState('')
   const [newFoodFat, setNewFoodFat] = useState('')
 
+  const resolveBackendUserId = async (supabaseUser) => {
+    if (!supabaseUser?.email) {
+      throw new Error('Missing authenticated user email')
+    }
+
+    const usersResponse = await fetch(`${API_BASE}/users`)
+    if (!usersResponse.ok) {
+      throw new Error('Failed to fetch backend users')
+    }
+
+    const users = await usersResponse.json()
+    const existing = users.find(
+      (u) => u.email?.toLowerCase() === supabaseUser.email.toLowerCase()
+    )
+
+    if (existing?.id) {
+      return existing.id
+    }
+
+    const createResponse = await fetch(`${API_BASE}/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: supabaseUser.email,
+        fullName:
+          supabaseUser.user_metadata?.full_name ||
+          supabaseUser.user_metadata?.name ||
+          '',
+      }),
+    })
+
+    if (!createResponse.ok) {
+      throw new Error('Failed to create backend user')
+    }
+
+    const created = await createResponse.json()
+    return created.id
+  }
+
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUser(data.user)
-      // For now, we'll use a placeholder ID (1) since the backend uses Long IDs
-      // In production, you'd need to sync Supabase users with your backend DB
-      setUserId(1)
+      try {
+        const { data } = await supabase.auth.getUser()
+        setUser(data.user)
+
+        if (data.user) {
+          const backendUserId = await resolveBackendUserId(data.user)
+          setUserId(backendUserId)
+        }
+      } catch (error) {
+        console.error('fetchUser error', error)
+        alert('Could not initialize user profile for meals')
+      }
     }
     fetchUser()
   }, [])
@@ -133,7 +179,10 @@ export default function MealBuilder() {
         }),
       })
 
-      if (!mealResponse.ok) throw new Error('Failed to create meal')
+      if (!mealResponse.ok) {
+        const msg = await mealResponse.text()
+        throw new Error(`Failed to create meal (${mealResponse.status}): ${msg}`)
+      }
       const meal = await mealResponse.json()
 
       // Create meal_foods entries
