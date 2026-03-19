@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
+import { ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 
@@ -20,9 +21,22 @@ export default function ViewMeals() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUserId(1)
-      fetchMeals(1)
+      try {
+        const { data } = await supabase.auth.getUser()
+        if (!data.user) {
+          setLoading(false)
+          return
+        }
+
+        const backendUser = await ensureBackendUserFromSupabaseUser(data.user)
+        const backendUserId = backendUser.id
+        setUserId(backendUserId)
+        fetchMeals(backendUserId)
+      } catch (error) {
+        console.error('fetchUser error', error)
+        alert('Could not initialize user profile for meals')
+        setLoading(false)
+      }
     }
     fetchUser()
   }, [])

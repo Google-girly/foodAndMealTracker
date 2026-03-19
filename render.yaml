@@ -17,6 +17,10 @@ services:
         sync: false
       - key: FRONTEND_ORIGIN
         sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
 
   # Frontend (Vite React static site)
   - type: web

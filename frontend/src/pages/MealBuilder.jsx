@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
+import { ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 
@@ -26,11 +27,19 @@ export default function MealBuilder() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUser(data.user)
-      // For now, we'll use a placeholder ID (1) since the backend uses Long IDs
-      // In production, you'd need to sync Supabase users with your backend DB
-      setUserId(1)
+      try {
+        const { data } = await supabase.auth.getUser()
+        setUser(data.user)
+
+        if (data.user) {
+          const backendUser = await ensureBackendUserFromSupabaseUser(data.user)
+          const backendUserId = backendUser.id
+          setUserId(backendUserId)
+        }
+      } catch (error) {
+        console.error('fetchUser error', error)
+        alert('Could not initialize user profile for meals')
+      }
     }
     fetchUser()
   }, [])
@@ -133,7 +142,10 @@ export default function MealBuilder() {
         }),
       })
 
-      if (!mealResponse.ok) throw new Error('Failed to create meal')
+      if (!mealResponse.ok) {
+        const msg = await mealResponse.text()
+        throw new Error(`Failed to create meal (${mealResponse.status}): ${msg}`)
+      }
       const meal = await mealResponse.json()
 
       // Create meal_foods entries
