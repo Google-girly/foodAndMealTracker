@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
 import { ensureBackendUser, ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 
@@ -82,10 +82,12 @@ export default function SignUp() {
           fullName: fullName.trim(),
         })
 
-        setMessage('Account created! Check your email to verify.')
-        setEmail('')
-        setPassword('')
-        setFullName('')
+        await supabase.auth.signInWithPassword({
+          email: email.trim(),
+          password: password.trim(),
+        })
+
+        navigate('/dashboard', { replace: true })
       }
     } catch (error) {
       console.error('handleEmailSignup error', error)
@@ -111,6 +113,10 @@ export default function SignUp() {
             <p style={{ margin: '0 0 10px 0', fontSize: '0.9em', color: '#666' }}>or</p>
             <button onClick={() => setShowEmailSignup(true)}>Sign up with email</button>
           </div>
+
+          <p style={{ marginTop: '20px', fontSize: '0.9em' }}>
+            Already have an account? <Link to="/login">Sign in</Link>
+          </p>
         </>
       ) : (
         <>
