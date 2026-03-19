@@ -6,6 +6,7 @@ import { ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 export default function Dashboard() {
 
   const [user, setUser] = useState(null)
+  const [backendUser, setBackendUser] = useState(null)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -14,7 +15,8 @@ export default function Dashboard() {
 
       if (data.user) {
         try {
-          await ensureBackendUserFromSupabaseUser(data.user)
+          const syncedUser = await ensureBackendUserFromSupabaseUser(data.user)
+          setBackendUser(syncedUser)
         } catch (error) {
           console.error('Failed to sync backend user', error)
         }
@@ -43,10 +45,11 @@ export default function Dashboard() {
               <button>View Meals</button>
             </Link>
 
-            {/* TODO: Only show this if user.admin is true once backend role wiring is complete */}
-            <Link to="/admin" style={{ marginRight: '10px' }}>
-              <button>Admin Page</button>
-            </Link>
+            {backendUser?.admin && (
+              <Link to="/admin" style={{ marginRight: '10px' }}>
+                <button>Admin Page</button>
+              </Link>
+            )}
 
             <button onClick={handleLogout}>Logout</button>
           </div>

@@ -1,3 +1,5 @@
+import { supabase } from '../supaBaseClient'
+
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 
 export async function ensureBackendUser({ email, fullName = '' }) {
@@ -55,4 +57,30 @@ export async function ensureBackendUserFromSupabaseUser(supabaseUser) {
     email: supabaseUser.email,
     fullName,
   })
+}
+
+export async function getAuthenticatedBackendUser() {
+  const { data, error } = await supabase.auth.getUser()
+
+  if (error) {
+    throw error
+  }
+
+  if (!data.user) {
+    throw new Error('No authenticated user found')
+  }
+
+  return ensureBackendUserFromSupabaseUser(data.user)
+}
+
+export function getUserRequestHeaders(userId, includeJsonContentType = true) {
+  const headers = {
+    'X-User-Id': String(userId),
+  }
+
+  if (includeJsonContentType) {
+    headers['Content-Type'] = 'application/json'
+  }
+
+  return headers
 }
