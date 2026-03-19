@@ -1,8 +1,10 @@
 package Group3.controller;
 
 import Group3.model.Food;
+import Group3.model.Meal;
 import Group3.model.User;
 import Group3.repository.FoodRepository;
+import Group3.repository.MealRepository;
 import Group3.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,10 +17,12 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final FoodRepository foodRepository;
+    private final MealRepository mealRepository;
 
-    public AdminController(UserRepository userRepository, FoodRepository foodRepository) {
+    public AdminController(UserRepository userRepository, FoodRepository foodRepository, MealRepository mealRepository) {
         this.userRepository = userRepository;
         this.foodRepository = foodRepository;
+        this.mealRepository = mealRepository;
     }
 
     // GET /admin/ping
@@ -390,6 +394,141 @@ public class AdminController {
                     } catch (DataIntegrityViolationException e) {
                         return ResponseEntity.status(409)
                                 .body("Could not delete food because it is used by an existing meal");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/meals/{mealId}")
+    public ResponseEntity<?> getMealById(
+            @PathVariable Long mealId,
+            HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        return mealRepository.findById(mealId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/meals")
+    public ResponseEntity<?> getAllMeals(HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        return ResponseEntity.ok(mealRepository.findAll());
+    }
+
+    @PostMapping("/meals")
+    public ResponseEntity<?> createMeal(
+            @RequestBody Meal meal,
+            HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        if (meal.getUsersId() == null) {
+            return ResponseEntity.badRequest().body("usersId is required");
+        }
+
+        if (meal.getName() == null || meal.getName().isBlank()) {
+            return ResponseEntity.badRequest().body("Meal name is required");
+        }
+
+        if (meal.getMealType() == null || meal.getMealType().isBlank()) {
+            return ResponseEntity.badRequest().body("mealType is required");
+        }
+
+        try {
+            Meal created = mealRepository.save(meal);
+            return ResponseEntity.status(201).body(created);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("Could not create meal. Check usersId and required fields.");
+        }
+    }
+
+    @PutMapping("/meals/{mealId}")
+    public ResponseEntity<?> updateMeal(
+            @PathVariable Long mealId,
+            @RequestBody Meal updatedMeal,
+            HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        return mealRepository.findById(mealId)
+                .map(meal -> {
+                    meal.setUsersId(updatedMeal.getUsersId());
+                    meal.setName(updatedMeal.getName());
+                    meal.setMealType(updatedMeal.getMealType());
+                    meal.setMealDate(updatedMeal.getMealDate());
+                    meal.setDescription(updatedMeal.getDescription());
+
+                    try {
+                        return ResponseEntity.ok(mealRepository.save(meal));
+                    } catch (DataIntegrityViolationException e) {
+                        return ResponseEntity.badRequest().body("Could not update meal. Check usersId and required fields.");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/meals/{mealId}")
+    public ResponseEntity<?> patchMeal(
+            @PathVariable Long mealId,
+            @RequestBody Meal partialMeal,
+            HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        return mealRepository.findById(mealId)
+                .map(meal -> {
+                    if (partialMeal.getUsersId() != null) meal.setUsersId(partialMeal.getUsersId());
+                    if (partialMeal.getName() != null) meal.setName(partialMeal.getName());
+                    if (partialMeal.getMealType() != null) meal.setMealType(partialMeal.getMealType());
+                    if (partialMeal.getMealDate() != null) meal.setMealDate(partialMeal.getMealDate());
+                    if (partialMeal.getDescription() != null) meal.setDescription(partialMeal.getDescription());
+
+                    try {
+                        return ResponseEntity.ok(mealRepository.save(meal));
+                    } catch (DataIntegrityViolationException e) {
+                        return ResponseEntity.badRequest().body("Could not update meal. Check usersId and required fields.");
+                    }
+                })
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/meals/{mealId}")
+    public ResponseEntity<?> deleteMeal(
+            @PathVariable Long mealId,
+            HttpServletRequest request) {
+
+        User admin = getCurrentAdmin(request);
+        if (admin == null) {
+            return ResponseEntity.status(403).body("Forbidden: Admins only");
+        }
+
+        return mealRepository.findById(mealId)
+                .map(meal -> {
+                    try {
+                        mealRepository.delete(meal);
+                        mealRepository.flush();
+                        return ResponseEntity.noContent().build();
+                    } catch (DataIntegrityViolationException e) {
+                        return ResponseEntity.status(409).body("Could not delete meal");
                     }
                 })
                 .orElse(ResponseEntity.notFound().build());
