@@ -311,6 +311,12 @@ export default function AdminFoods() {
         <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '16px' }}>
           <h2 style={{ marginTop: 0 }}>Existing Foods</h2>
 
+          {foods.length === 0 && (
+            <p style={{ color: '#666' }}>
+              No foods found. Create a food with the form, or confirm the backend /foods endpoint returns data.
+            </p>
+          )}
+
           <label style={{ display: 'block', marginBottom: '16px' }}>
             Select a food to edit
             <select
