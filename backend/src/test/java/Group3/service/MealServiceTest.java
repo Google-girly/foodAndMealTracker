@@ -1,17 +1,21 @@
 package Group3.service;
 
-import Group3.model.Meal;
-import Group3.repository.MealRepository;
+import java.time.LocalDate;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.Optional;
-import java.time.LocalDate;
+import Group3.model.Meal;
+import Group3.repository.MealRepository;
 
 /**
  * Unit tests for the MealService class.
@@ -92,5 +96,30 @@ public class MealServiceTest {
         when(mealRepository.findByIdAndUsersId(1L, usersId)).thenReturn(Optional.empty());
         Optional<Meal> result = mealService.updateMeal(1L,new Meal(), usersId);
         assertTrue(result.isEmpty());
+    }
+    @Test
+    void testUpdateMeal_UserDoesNotOwnMeal_shouldReturnEmpty(){
+        Long mealId = 1L;
+        long userId = 1L;
+
+        when(mealRepository.findByIdAndUsersId(mealId, userId)).thenReturn(Optional.empty());
+
+        Optional<Meal> result = mealService.updateMeal(mealId, new Meal(),userId);
+
+        assertTrue(result.isEmpty());
+        verify(mealRepository, never()).save(any());
+
+    }
+    @Test
+    void testPatchMeal_UserDoesNotOwnMeal_shouldReturnEmpty(){
+        Long mealId = 1L;
+        long userId = 1L;
+
+        when(mealRepository.findByIdAndUsersId(mealId, userId)).thenReturn(Optional.empty());
+
+        Optional<Meal> result = mealService.patchMeal(mealId, new Meal(),userId);
+
+        assertTrue(result.isEmpty());
+        verify(mealRepository, never()).save(any());
     }
 }
