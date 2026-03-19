@@ -6,15 +6,41 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ * Controller responsible for handling administrative operations.
+ * 
+ * Provides endpoints for:
+ * - Verifying admin access
+ * - Retrieving users
+ * - Updating user admin status
+ * - Deleting users
+ */
+
+
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserRepository userRepository;
+    /**
+     * Constructs an AdminController with the given UserRepository.
+     *
+     * @param userRepository repository used to access user data
+     */
+
 
     public AdminController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+    /**
+     * Verifies whether the current user has admin access.
+     *
+     * @param request HTTP request containing authentication data
+     * @return 200 OK if admin, 401 if unauthorized, 403 if not admin
+     */
 
     // GET /admin/ping
     @GetMapping("/ping")
@@ -78,6 +104,15 @@ public class AdminController {
     return user;
 }
 
+
+      /**
+     * Retrieves a user by their ID.
+     *
+     * @param userId the ID of the user to retrieve
+     * @param request HTTP request containing authentication data
+     * @return the user if found, or appropriate error response
+     */
+
     @GetMapping("/users/{userId}")
     public ResponseEntity<?> getUserById(
         @PathVariable Long userId,
@@ -93,6 +128,13 @@ public class AdminController {
             .orElse(ResponseEntity.notFound().build());
 }
 
+
+    /**
+     * Retrieves all users in the system.
+     *
+     * @param request HTTP request containing authentication data
+     * @return list of users or forbidden response if not admin
+     */
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
 
@@ -103,6 +145,15 @@ public class AdminController {
 
         return ResponseEntity.ok(userRepository.findAll());
     }
+
+    /**
+     * Updates the admin status of a user.
+     *
+     * @param userId the ID of the user to update
+     * @param adminStatus the new admin status (true or false)
+     * @param request HTTP request containing authentication data
+     * @return updated user or error response
+     */
     @PatchMapping("/users/{userId}")
     public ResponseEntity<?> updateAdminStatus(
             @PathVariable Long userId,
@@ -127,7 +178,13 @@ public class AdminController {
                 })
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    /**
+     * Deletes a user by their ID.
+     *
+     * @param userId the ID of the user to delete
+     * @param request HTTP request containing authentication data
+     * @return no content if deleted, or error response
+     */
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteUser(
             @PathVariable Long userId,

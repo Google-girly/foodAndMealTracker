@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"Group3"},{"l":"Group3.config"},{"l":"Group3.controller"},{"l":"Group3.model"},{"l":"Group3.repository"},{"l":"Group3.service"}];updateSearchResults();

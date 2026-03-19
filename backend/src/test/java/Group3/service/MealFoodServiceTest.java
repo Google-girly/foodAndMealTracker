@@ -15,17 +15,28 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for the MealFoodService class.
+ *
+ * Verifies CRUD operations and behavior using mocked MealFoodRepository.
+ */
 public class MealFoodServiceTest {
 
     private MealFoodRepository mealFoodRepository;
     private MealFoodService mealFoodService;
 
+    /**
+     * Sets up the test environment before each test.
+     */
     @BeforeEach
     void setUp() {
         mealFoodRepository = Mockito.mock(MealFoodRepository.class);
         mealFoodService = new MealFoodService(mealFoodRepository);
     }
 
+    /**
+     * Tests retrieving all meal-food entries.
+     */
     @Test
     void testGetAllMealFoods() {
         when(mealFoodRepository.findAll()).thenReturn(List.of(new MealFood(), new MealFood()));
@@ -34,6 +45,9 @@ public class MealFoodServiceTest {
         verify(mealFoodRepository).findAll();
     }
 
+    /**
+     * Tests retrieving a meal-food entry by ID.
+     */
     @Test
     void testGetMealFoodById() {
         MealFood mf = new MealFood();
@@ -47,6 +61,9 @@ public class MealFoodServiceTest {
         verify(mealFoodRepository).findById(1L);
     }
 
+    /**
+     * Tests creating a new meal-food entry.
+     */
     @Test
     void testCreateMealFood() {
         MealFood toCreate = new MealFood();
@@ -66,6 +83,9 @@ public class MealFoodServiceTest {
         verify(mealFoodRepository).save(toCreate);
     }
 
+    /**
+     * Tests successful update of a meal-food entry.
+     */
     @Test
     void testUpdateMealFood_Success_updatesAllFields() {
         MealFood existing = new MealFood();
@@ -97,6 +117,9 @@ public class MealFoodServiceTest {
         assertSame(existing, captor.getValue());
     }
 
+    /**
+     * Tests update behavior when entry is not found.
+     */
     @Test
     void testUpdateMealFood_NotFound_returnsEmptyAndDoesNotSave() {
         when(mealFoodRepository.findById(1L)).thenReturn(Optional.empty());
@@ -107,6 +130,9 @@ public class MealFoodServiceTest {
         verify(mealFoodRepository, never()).save(any());
     }
 
+    /**
+     * Tests partial update of a meal-food entry.
+     */
     @Test
     void testPatchMealFood_Success_onlyUpdatesProvidedFields() {
         MealFood existing = new MealFood();
@@ -131,6 +157,9 @@ public class MealFoodServiceTest {
         assertEquals("g", saved.getUnit());
     }
 
+    /**
+     * Tests patch behavior when entry is not found.
+     */
     @Test
     void testPatchMealFood_NotFound_returnsEmptyAndDoesNotSave() {
         when(mealFoodRepository.findById(1L)).thenReturn(Optional.empty());

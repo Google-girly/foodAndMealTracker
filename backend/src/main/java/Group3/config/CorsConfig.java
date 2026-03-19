@@ -8,12 +8,30 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 
+/**
+ * Configuration class for handling Cross-Origin Resource Sharing (CORS).
+ *
+ * This class defines allowed origins, HTTP methods, headers,
+ * and credentials for cross-origin requests.
+ */
 @Configuration
 public class CorsConfig {
 
   @Value("${frontend.origin:http://localhost:5173}")
   private String frontendOrigins;
-
+  /**
+   * Default constructor for CorsConfig.
+   */
+  public CorsConfig() {
+  }
+/**
+   * Configures CORS settings for the application.
+   *
+   * Allows requests from specified frontend origins and
+   * supports common HTTP methods and headers.
+   *
+   * @return a WebMvcConfigurer that applies CORS configuration
+   */
   @Bean
   public WebMvcConfigurer corsConfigurer() {
     return new WebMvcConfigurer() {
