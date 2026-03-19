@@ -71,7 +71,36 @@ export default function Login() {
     <div style={{ maxWidth: '520px', margin: '80px auto', padding: '24px', textAlign: 'center' }}>
       <h1>Sign In</h1>
 
-      <form onSubmit={handleEmailLogin} style={{ marginTop: '20px' }}>
+      <button 
+        type="button"
+        onClick={handleGoogleLogin}
+        disabled={loading}
+        style={{ 
+          width: '100%', 
+          padding: '12px', 
+          marginTop: '20px',
+          backgroundColor: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          cursor: loading ? 'not-allowed' : 'pointer',
+          fontSize: '1em',
+          fontWeight: '500',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '8px'
+        }}
+      >
+        Continue with Google
+      </button>
+
+      <div style={{ margin: '16px 0', position: 'relative' }}>
+        <div style={{ borderBottom: '1px solid #ddd', marginBottom: '16px' }}></div>
+        <p style={{ margin: '0', fontSize: '0.9em', color: '#666' }}>or</p>
+        <div style={{ borderTop: '1px solid #ddd', marginTop: '16px' }}></div>
+      </div>
+
+      <form onSubmit={handleEmailLogin} style={{ marginTop: '0' }}>
         <div style={{ marginBottom: '10px' }}>
           <label>
             Email
