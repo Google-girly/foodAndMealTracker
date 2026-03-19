@@ -14,6 +14,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
+/**
+ * Integration tests for admin access control.
+ *
+ * Verifies that:
+ * - Non-admin users receive 403 Forbidden
+ * - Admin users receive 200 OK
+ */
 @SpringBootTest
 @ActiveProfiles("test")
 public class AdminAccessTest {
@@ -23,11 +30,20 @@ public class AdminAccessTest {
 
     private MockMvc mockMvc;
 
+    /**
+     * Sets up the MockMvc instance before each test.
+     */
     @BeforeEach
     void setUp() {
         mockMvc = webAppContextSetup(context).build();
     }
 
+    /**
+     * Tests that non-admin users are denied access
+     * and admin users are granted access to the admin endpoint.
+     *
+     * @throws Exception if the request fails
+     */
     @Test
     void nonAdminGets403_adminGets200() throws Exception {
         // non-admin

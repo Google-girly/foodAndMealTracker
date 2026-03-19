@@ -16,6 +16,11 @@ import org.springframework.test.context.ActiveProfiles;
 import Group3.model.User;
 import Group3.repository.UserRepository;
 
+/**
+ * Integration tests for meal ownership and access control.
+ *
+ * Verifies that users cannot access meals that belong to other users.
+ */
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MealOwnershipTest {
@@ -26,6 +31,11 @@ class MealOwnershipTest {
     @LocalServerPort
     private int port;
 
+    /**
+     * Tests that a user cannot access another user's meal.
+     *
+     * @throws Exception if HTTP requests fail
+     */
     @Test
     void userCannotAccessAnotherUsersMeal_returns404() throws Exception {
         User user1 = new User();
@@ -82,6 +92,12 @@ class MealOwnershipTest {
         assertEquals(404, getResponse.statusCode(), "User 2 should not access user 1 meal");
     }
 
+     /**
+     * Extracts the "id" field from a JSON string.
+     *
+     * @param json the JSON response string
+     * @return extracted ID or null if not found
+     */
     // Very small helper to avoid bringing in JSON libs:
     private Long extractId(String json) {
         // expects something like ..."id":123,...

@@ -18,15 +18,34 @@ import Group3.service.MealService;
 
 import java.util.*;
 
+/**
+ * Controller responsible for managing meal-related operations.
+ *
+ * Provides endpoints to:
+ * - Retrieve meals for a user
+ * - Retrieve a specific meal
+ * - Create, update, and delete meals
+ *
+ * All endpoints require a valid user ID from the request.
+ */
 @RestController
 @RequestMapping("/meals")
 public class MealController {
     private final MealService mealService;
-
+    /**
+     * Constructs a MealController with the given MealService.
+     *
+     * @param mealService service used to manage meal data
+     */
     public MealController(MealService mealService) {
         this.mealService = mealService;
     }
-
+    /**
+     * Retrieves all meals for the authenticated user.
+     *
+     * @param request HTTP request containing authentication data
+     * @return list of meals or 401 if unauthorized
+     */
     // GET /meals
     @GetMapping
     public ResponseEntity<List<Meal>> getAllMeals(HttpServletRequest request) {
@@ -35,7 +54,13 @@ public class MealController {
             return ResponseEntity.status(401).build();
         return ResponseEntity.ok(mealService.getAllMeals(usersId));
     }
-
+    /**
+     * Retrieves a specific meal by ID for the authenticated user.
+     *
+     * @param id the ID of the meal
+     * @param request HTTP request containing authentication data
+     * @return meal if found, 401 if unauthorized, or 404 if not found
+     */
     // GET /meals/{id}
     @GetMapping("/{id}")
     public ResponseEntity<Meal> getMealById(@PathVariable Long id, HttpServletRequest request) {
@@ -46,7 +71,13 @@ public class MealController {
 
         return mealService.getMealbyId(id, usersId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
-
+    /**
+     * Creates a new meal for the authenticated user.
+     *
+     * @param meal the meal to create
+     * @param request HTTP request containing authentication data
+     * @return created meal with 201 status or 401 if unauthorized
+     */
     // POST /meals
     @PostMapping
     public ResponseEntity<Meal> createMeal(@RequestBody Meal meal, HttpServletRequest request) {
@@ -94,7 +125,15 @@ public class MealController {
      * return Long.parseLong(header);
      * }
      */
-
+    
+     /**
+     * Updates an existing meal completely.
+     *
+     * @param id the ID of the meal to update
+     * @param updatedMeal the updated meal data
+     * @param request HTTP request containing authentication data
+     * @return updated meal, 401 if unauthorized, or 404 if not found
+     */
     // PUT
     @PutMapping("/{id}")
     public ResponseEntity<Meal> updateMeal(@PathVariable Long id,
@@ -110,6 +149,15 @@ public class MealController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
+    /**
+     * Partially updates an existing meal.
+     *
+     * @param id the ID of the meal to update
+     * @param partialMeal the partial meal data
+     * @param request HTTP request containing authentication data
+     * @return updated meal, 401 if unauthorized, or 404 if not found
+     */
     // PATCH
     @PatchMapping("/{id}")
     public ResponseEntity<Meal> patchMeal(@PathVariable Long id,
@@ -124,7 +172,12 @@ public class MealController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-
+    /**
+     * Deletes a meal by its ID.
+     *
+     * @param id the ID of the meal to delete
+     * @return 204 No Content after deletion
+     */
     // DELETE
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMeal(@PathVariable Long id) {

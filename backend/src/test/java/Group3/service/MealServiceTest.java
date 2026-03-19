@@ -17,15 +17,27 @@ import static org.mockito.Mockito.when;
 import Group3.model.Meal;
 import Group3.repository.MealRepository;
 
+/**
+ * Unit tests for the MealService class.
+ *
+ * Verifies update and patch operations using a mocked MealRepository.
+ */
 public class MealServiceTest {
     private MealRepository mealRepository;
     private MealService mealService;
 
+    /**
+     * Sets up the test environment before each test.
+     */
     @BeforeEach
     void setUp(){
         mealRepository = Mockito.mock(MealRepository.class);
         mealService = new MealService(mealRepository);
     }
+
+    /**
+     * Tests successful full update (PUT) of a meal.
+     */
     @Test
     void testUpdateMeal_put_Success(){
         Meal existingMeal = new Meal();
@@ -52,6 +64,9 @@ public class MealServiceTest {
         assertEquals(usersId, result.get().getUsersId());
     }
 
+    /**
+     * Tests successful partial update (PATCH) of a meal.
+     */
     @Test
     void testPatchMeal_Success(){
         Meal existingMeal = new Meal();
@@ -71,6 +86,10 @@ public class MealServiceTest {
         assertEquals("BREAKFAST",result.get().getMealType());
         assertEquals(usersId, result.get().getUsersId());
     }
+
+    /**
+     * Tests update behavior when the meal is not found.
+     */
     @Test
     void testUpdateMeal_NotFound(){
         Long usersId = 1L;

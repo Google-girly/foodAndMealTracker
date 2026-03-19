@@ -5,9 +5,25 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller providing health check endpoints for the application.
+ *
+ * Used to verify that the service is running and accessible.
+ */
 @RestController
 public class HealthController {
 
+/**
+     * Default constructor for HealthController.
+     */
+    public HealthController() {
+    }
+
+    /**
+     * Root endpoint providing basic service information.
+     *
+     * @return a map containing service status and metadata
+     */
     @GetMapping("/")
     public Map<String, Object> root() {
         return Map.of(
@@ -25,6 +41,11 @@ public class HealthController {
       "status": "ok",
       "timestamp": "2026-02-24T13:45:12.123Z" */
 
+     /**
+     * Health check endpoint returning current system status.
+     *
+     * @return a map containing status and current timestamp
+     */
     @GetMapping("/health")
     public Map<String, Object> health() {
         return Map.of(

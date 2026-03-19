@@ -40,6 +40,10 @@ dependencies {
 
 	//adds H2 test dependency
 	testImplementation 'com.h2database:h2'
+
+	//openai dependency
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
+
 	testImplementation 'io.rest-assured:rest-assured:5.4.0'	
 
 	testImplementation 'io.rest-assured:spring-mock-mvc:5.4.0'
