@@ -87,7 +87,7 @@ public class User {
      * @return admin status
      */
     public Boolean getAdmin() { return admin; }
-    // public void setAdmin(Boolean admin) { this.admin = admin; }
+    public void setAdmin(Boolean admin) { this.admin = admin; }
 
     /**
      * Gets the creation timestamp of the user.
