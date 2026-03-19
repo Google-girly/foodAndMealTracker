@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
+import { ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 
 export default function Dashboard() {
 
@@ -10,6 +11,14 @@ export default function Dashboard() {
     const fetchUser = async () => {
       const { data } = await supabase.auth.getUser()
       setUser(data.user)
+
+      if (data.user) {
+        try {
+          await ensureBackendUserFromSupabaseUser(data.user)
+        } catch (error) {
+          console.error('Failed to sync backend user', error)
+        }
+      }
     }
 
     fetchUser()

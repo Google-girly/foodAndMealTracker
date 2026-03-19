@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { supabase } from '../supaBaseClient'
+import { ensureBackendUserFromSupabaseUser } from '../utils/backendUser'
 
 const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '')
 
@@ -18,45 +19,6 @@ export default function ViewMeals() {
   const [editName, setEditName] = useState('')
   const [editType, setEditType] = useState('snack')
 
-  const resolveBackendUserId = async (supabaseUser) => {
-    if (!supabaseUser?.email) {
-      throw new Error('Missing authenticated user email')
-    }
-
-    const usersResponse = await fetch(`${API_BASE}/users`)
-    if (!usersResponse.ok) {
-      throw new Error('Failed to fetch backend users')
-    }
-
-    const users = await usersResponse.json()
-    const existing = users.find(
-      (u) => u.email?.toLowerCase() === supabaseUser.email.toLowerCase()
-    )
-
-    if (existing?.id) {
-      return existing.id
-    }
-
-    const createResponse = await fetch(`${API_BASE}/users`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: supabaseUser.email,
-        fullName:
-          supabaseUser.user_metadata?.full_name ||
-          supabaseUser.user_metadata?.name ||
-          '',
-      }),
-    })
-
-    if (!createResponse.ok) {
-      throw new Error('Failed to create backend user')
-    }
-
-    const created = await createResponse.json()
-    return created.id
-  }
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -66,7 +28,8 @@ export default function ViewMeals() {
           return
         }
 
-        const backendUserId = await resolveBackendUserId(data.user)
+        const backendUser = await ensureBackendUserFromSupabaseUser(data.user)
+        const backendUserId = backendUser.id
         setUserId(backendUserId)
         fetchMeals(backendUserId)
       } catch (error) {

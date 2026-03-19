@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
+import SignUp from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import MealBuilder from './pages/MealBuilder'
 import ViewMeals from './pages/ViewMeals'
@@ -13,6 +14,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
 
         <Route
@@ -78,7 +80,7 @@ function App() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/dashboard" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </BrowserRouter>
   )
