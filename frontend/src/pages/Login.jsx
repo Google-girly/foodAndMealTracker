@@ -26,6 +26,22 @@ export default function Login() {
     checkSession()
   }, [navigate])
 
+  const handleGoogleLogin = async () => {
+    setLoading(true)
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      })
+    } catch (error) {
+      console.error('handleGoogleLogin error', error)
+      setError('Error signing in with Google')
+      setLoading(false)
+    }
+  }
+
   const handleEmailLogin = async (e) => {
     e.preventDefault()
     setLoading(true)
